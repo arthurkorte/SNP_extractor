@@ -1,17 +1,18 @@
 ### extracting SNP information for 1001 genomes data genewise, tair10 annotation 
-
-
-
-
+## need to upate to make it flexible if script uses the 1135 or the 2029 data 
+# numeric value for all accessions 
+#all<-read.csv('all_2029acc.csv')
+#all<-as.numeric(all[,1])
 #could change script to use non_imputed sata as well .
 #gene<-'AT4G04740'
-snporator<-function(gene,X.folder='/storage/evolgen/data/1135_data') {
-
-out.folder<-getwd()
 
 load('/storage/evolgen/data/anno_1135.rda')
 load('/storage/evolgen/data/tair10.rda')
 load('/storage/evolgen/data/snps_2029.rda')
+
+snporator<-function(gene,X.folder='/storage/evolgen/data/2029_data',accessions=all) {
+
+out.folder<-getwd()
 
 setwd(X.folder)
 a1<-tair10[which(tair10[,5]==gene),2]
@@ -25,8 +26,8 @@ h<-1
  for ( r in 1:nrow(D)) {
 if(D[h,3]%in%SNPs$SNP==FALSE) { h=h+1} else {break}}
 
-load(paste('X_1135_',SNPs[which(SNPs$SNP==D[h,3]),5],'.rda.gz',sep=''))
-XX<-X[,colnames(X)%in%D$SNP]
+load(paste('X_2029_',SNPs[which(SNPs$SNP==D[h,3]),5],'.rda',sep=''))
+XX<-X[rownames(X)%in%accessions,colnames(X)%in%D$SNP]
 rm(X)
 j<-nrow(D)
  for ( r in 1:nrow(D)) {
@@ -35,8 +36,8 @@ if(D[j,3]%in%SNPs$SNP==FALSE) { j=j-1} else {break}}
 
  if(SNPs[which(SNPs$SNP==D[j,3]),5]!=SNPs[which(SNPs$SNP==D[h,3]),5]) {
  
-load(paste('X_1135_',SNPs[which(SNPs$SNP==D[nrow(D),3]),5],'.rda.gz',sep=''))
-XX<-cbind(XX,X[,colnames(X)%in%D$SNP])
+load(paste('X_2029_',SNPs[which(SNPs$SNP==D[nrow(D),3]),5],'.rda',sep=''))
+XX<-cbind(XX,X[rownames(X)%in%accessions,colnames(X)%in%D$SNP])
 rm(X) }
 
 D_<-subset(D,D$SNP%in%colnames(XX))
@@ -48,11 +49,11 @@ D2<-D_[,-6]
  Dns<-D_[grep('NON_S',D_[,6]),]
  
 A<-data.frame(SNP=c('length','total','non','syn','start','stop','low','moderate','high'),Number=c(a2-a1,nrow(D_),length(grep('NON_S',D_[,6])),(length(grep('SYN',D_[,6]))-length(grep('NON_S',D_[,6]))),length(grep('START',D_[,6])),length(grep('STOP',D_[,6])),length(grep('LOW',D_[,6])),length(grep('MODERATE',D_[,6])),length(grep('HIGH',D_[,6]))))
- 
+if (dim(Dns)[1]>0) {
 V<-strsplit(Dns[,6],split="|",fixed=T)
 for ( i in 1: nrow(Dns)) {
  Dns[i,8]<-paste(unique(V[[i]][grep('NON_S',V[[i]])+3]),collapse=',')}
-
+if (dim(Dns)[1]>0) 
 Dns<-Dns[,-6]
 
 X2<-XX[,colnames(XX)%in%Dns[,3]]
@@ -62,12 +63,12 @@ colnames(Dns)[7]<-'AA exchange'
 Dns$accessions<-NA
  for ( z in 1:nrow(Dns)) {
  Dns[z,8]<-paste(rownames(X2)[which(X2[,z]==1)],collapse=',')}
+}
 
 
-
-out1<-paste(gene,'snp_summary.txt',sep='_')
-out2<-paste(gene,'non_syn_snps.txt',sep='_')
-out3<-paste(gene,'snp_count.txt',sep='_')
+out1<-paste(gene,length(accessions),'acc_snp_summary.txt',sep='_')
+out2<-paste(gene,length(accessions),'acc_non_syn_snps.txt',sep='_')
+out3<-paste(gene,length(accessions),'acc_snp_count.txt',sep='_')
 setwd(out.folder)
 write.table(A,file=out1,row.names=FALSE)
 write.table(Dns,file=out2,row.names=FALSE)
