@@ -1,18 +1,19 @@
 ### extracting SNP information for 1001 genomes data genewise, tair10 annotation 
 ## need to upate to make it flexible if script uses the 1135 or the 2029 data 
-# numeric value for all accessions 
-#all<-read.csv('all_2029acc.csv')
-#all<-as.numeric(all[,1])
+# data are available ...
+#need to update snps_2029 for use with 1135 data as well
+
 #could change script to use non_imputed sata as well .
 #gene<-'AT4G04740'
 
-load('/storage/evolgen/data/anno_1135.rda')
-load('/storage/evolgen/data/tair10.rda')
-load('/storage/evolgen/data/snps_2029.rda')
+wd<-getwd()
+load('~/data/all_acc.rda')
+load('~/data/anno_1135.rda')
+load('~/data/tair10.rda')
+load('~/data/snps_2029.rda')
 
-snporator<-function(gene,X.folder='/storage/evolgen/data/2029_data',accessions=all) {
+snporator<-function(gene,X.folder='~/data/1135_data',accessions=all,out.folder=wd) {
 
-out.folder<-getwd()
 
 setwd(X.folder)
 a1<-tair10[which(tair10[,5]==gene),2]
@@ -26,9 +27,10 @@ h<-1
  for ( r in 1:nrow(D)) {
 if(D[h,3]%in%SNPs$SNP==FALSE) { h=h+1} else {break}}
 
-load(paste('X_2029_',SNPs[which(SNPs$SNP==D[h,3]),5],'.rda',sep=''))
+load(paste('X_1135_',SNPs[which(SNPs$SNP==D[h,3]),5],'.rda.gz',sep=''))
 XX<-X[rownames(X)%in%accessions,colnames(X)%in%D$SNP]
 rm(X)
+lol<-nrow(XX)
 j<-nrow(D)
  for ( r in 1:nrow(D)) {
 if(D[j,3]%in%SNPs$SNP==FALSE) { j=j-1} else {break}}
@@ -36,7 +38,7 @@ if(D[j,3]%in%SNPs$SNP==FALSE) { j=j-1} else {break}}
 
  if(SNPs[which(SNPs$SNP==D[j,3]),5]!=SNPs[which(SNPs$SNP==D[h,3]),5]) {
  
-load(paste('X_2029_',SNPs[which(SNPs$SNP==D[nrow(D),3]),5],'.rda',sep=''))
+load(paste('X_1135_',SNPs[which(SNPs$SNP==D[nrow(D),3]),5],'.rda.gz',sep=''))
 XX<-cbind(XX,X[rownames(X)%in%accessions,colnames(X)%in%D$SNP])
 rm(X) }
 
@@ -66,9 +68,9 @@ Dns$accessions<-NA
 }
 
 
-out1<-paste(gene,length(accessions),'acc_snp_summary.txt',sep='_')
-out2<-paste(gene,length(accessions),'acc_non_syn_snps.txt',sep='_')
-out3<-paste(gene,length(accessions),'acc_snp_count.txt',sep='_')
+out1<-paste(gene,lol,'acc_snp_summary.txt',sep='_')
+out2<-paste(gene,lol,'acc_non_syn_snps.txt',sep='_')
+out3<-paste(gene,lol,'acc_snp_count.txt',sep='_')
 setwd(out.folder)
 write.table(A,file=out1,row.names=FALSE)
 write.table(Dns,file=out2,row.names=FALSE)
