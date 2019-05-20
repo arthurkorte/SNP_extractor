@@ -1,19 +1,24 @@
-### extracting SNP information for 1001 genomes data genewise, tair10 annotation 
-## need to upate to make it flexible if script uses the 1135 or the 2029 data 
-# data are available ...
-#need to update snps_2029 for use with 1135 data as well
+### extracting SNP information for 1001 genomes data genewise, tair10 annotation  
+## all data needed are available at go.uniwue.de/snpextractor 
+## can be run with resequencing data (data=1135, default) or with imputed 2029 data (data=2029)
 
-#could change script to use non_imputed sata as well .
-#gene<-'AT4G04740'
+## will change script to use non_imputed data as well in the future
+
+## the gene needs to be specified with standard AGI code (gene<-'AT4G04740')
+
 
 wd<-getwd()
-load('~/data/all_acc.rda')
-load('~/data/anno_1135.rda')
-load('~/data/tair10.rda')
-load('~/data/snps_2029.rda')
 
-snporator<-function(gene,X.folder='~/data/1135_data',accessions=all,out.folder=wd) {
+##  depending on where you put the data you might need to modfy the respective path
+load('~/data/additional_data/all_acc.rda')
+load('~/data/additional_data/anno_1135.rda')
+load('~/data/additional_data/tair10.rda')
+load('~/data/additional_data/snps_2029.rda')
+## X.prefix is the prefix for the X.folder
 
+snporator<-function(gene,X.prefix='~/data/',data=1135,accessions=all,out.folder=wd) {
+if(!data%in%attributes(snporator)$data) stop('Data need to be either 1135 or 2029')
+X.folder=paste(X.prefix,data,'_data/',sep='')
 
 setwd(X.folder)
 a1<-tair10[which(tair10[,5]==gene),2]
@@ -27,7 +32,7 @@ h<-1
  for ( r in 1:nrow(D)) {
 if(D[h,3]%in%SNPs$SNP==FALSE) { h=h+1} else {break}}
 
-load(paste('X_1135_',SNPs[which(SNPs$SNP==D[h,3]),5],'.rda.gz',sep=''))
+load(paste('X_',data,'_',SNPs[which(SNPs$SNP==D[h,3]),5],'.rda.gz',sep=''))
 XX<-X[rownames(X)%in%accessions,colnames(X)%in%D$SNP]
 rm(X)
 lol<-nrow(XX)
@@ -38,7 +43,7 @@ if(D[j,3]%in%SNPs$SNP==FALSE) { j=j-1} else {break}}
 
  if(SNPs[which(SNPs$SNP==D[j,3]),5]!=SNPs[which(SNPs$SNP==D[h,3]),5]) {
  
-load(paste('X_1135_',SNPs[which(SNPs$SNP==D[nrow(D),3]),5],'.rda.gz',sep=''))
+load(paste('X_',data,'_',SNPs[which(SNPs$SNP==D[nrow(D),3]),5],'.rda.gz',sep=''))
 XX<-cbind(XX,X[rownames(X)%in%accessions,colnames(X)%in%D$SNP])
 rm(X) }
 
@@ -78,4 +83,6 @@ write.table(D2,file=out3,row.names=FALSE)
 
 cat('files',out1,out2,out3,'have been generated!','\n')
 }
+
+attr(snporator,'data')<-c(1135,2029)
 
