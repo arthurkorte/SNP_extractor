@@ -10,10 +10,10 @@
 wd<-getwd()
 
 ##  depending on where you put the data you might need to modfy the respective path
-load('~/data/additional_data/all_acc.rda')
-load('~/data/additional_data/anno_ara11_snps.rda')
-load('~/data/additional_data/ara11.rda')
-load('~/data/additional_data/snps_2029.rda')
+load('data/additional_data/all_acc.rda')
+load('data/additional_data/anno_ara11_snps.rda')
+load('data/additional_data/ara11.rda')
+load('data/additional_data/snps_2029.rda')
 ## X.prefix is the prefix for the X.folder
 
 snporator<-function(gene,X.prefix='~/data/',data=1135,accessions=all,out.folder=wd) {
