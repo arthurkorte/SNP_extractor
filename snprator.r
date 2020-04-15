@@ -29,7 +29,7 @@ h<-1
  for ( r in 1:nrow(D)) {
 if(D[h,3]%in%SNPs$SNP==FALSE) { h=h+1} else {break}}
 
-load(paste('X_',data,'_',SNPs[which(SNPs$SNP==D[h,3]),5],'.rda.gz',sep=''))
+load(paste('X_',data,'_',SNPs[which(SNPs$SNP==D[h,3]),5],'.rda',sep=''))
 XX<-X[as.numeric(rownames(X))%in%accessions,colnames(X)%in%D$SNP]
 rm(X)
 lol<-nrow(XX)
@@ -40,7 +40,7 @@ if(D[j,3]%in%SNPs$SNP==FALSE) { j=j-1} else {break}}
 
  if(SNPs[which(SNPs$SNP==D[j,3]),5]!=SNPs[which(SNPs$SNP==D[h,3]),5]) {
  
-load(paste('X_',data,'_',SNPs[which(SNPs$SNP==D[nrow(D),3]),5],'.rda.gz',sep=''))
+load(paste('X_',data,'_',SNPs[which(SNPs$SNP==D[nrow(D),3]),5],'.rda',sep=''))
 XX<-cbind(XX,X[as.numeric(rownames(X))%in%accessions,colnames(X)%in%D$SNP])
 rm(X) }
 
