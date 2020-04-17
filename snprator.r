@@ -7,14 +7,15 @@
 ## the gene needs to be specified with standard AGI code (gene<-'AT4G04740')
 
 
-wd<-getwd()
-
-##  depending on where you put the data you might need to modfy the respective path
-load('data/additional_data/all_acc.rda')
-load('data/additional_data/anno_ara11_snps.rda')
-load('data/additional_data/ara11.rda')
-load('data/additional_data/snps_2029.rda')
+##  depending on where you put the data you might need to modfy the respective path to load the required data 
+#load('data/additional_data/all_acc.rda')
+#load('data/additional_data/anno_ara11_snps.rda')
+#load('data/additional_data/ara11.rda')
+#load('data/additional_data/snps_2029.rda')
 ## X.prefix is the prefix for the X.folder
+
+
+wd<-getwd()
 
 snporator<-function(gene,X.prefix='~/data/',data=1135,accessions=all,out.folder=wd) {
 if(!data%in%attributes(snporator)$data) stop('Data need to be either 1135 or 2029')
@@ -40,7 +41,7 @@ if(D[j,3]%in%SNPs$SNP==FALSE) { j=j-1} else {break}}
 
  if(SNPs[which(SNPs$SNP==D[j,3]),5]!=SNPs[which(SNPs$SNP==D[h,3]),5]) {
  
-load(paste('X_',data,'_',SNPs[which(SNPs$SNP==D[nrow(D),3]),5],'.rda',sep=''))
+load(paste('X_',data,'_',SNPs[which(SNPs$SNP==D[nrow(D),3]),5],'.rda.gz',sep=''))
 XX<-cbind(XX,X[as.numeric(rownames(X))%in%accessions,colnames(X)%in%D$SNP])
 rm(X) }
 
