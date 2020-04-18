@@ -62,9 +62,10 @@ D_$count<-apply(XX,2,sum)
  
 X2<-XX[,colnames(XX)%in%Dns[,3]]
 ## get accessions with alternative Allele 
+if(nrow(Dns)>0) {
 Dns$accessions<-NA
  for ( z in 1:nrow(Dns)) {
- Dns[z,11]<-paste(rownames(X2)[which(X2[,z]==1)],collapse=',')}
+ Dns[z,11]<-paste(rownames(X2)[which(X2[,z]==1)],collapse=',')}}
 
 
 
