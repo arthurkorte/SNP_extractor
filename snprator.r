@@ -31,7 +31,8 @@ h<-1
 if(D[h,3]%in%SNPs$SNP==FALSE) { h=h+1} else {break}}
 
 load(paste('X_',data,'_',SNPs[which(SNPs$SNP==D[h,3]),5],'.rda',sep=''))
-XX<-X[as.numeric(rownames(X))%in%accessions,colnames(X)%in%D$SNP]
+XX<-as.matrix(X[as.numeric(rownames(X))%in%accessions,colnames(X)%in%D$SNP])
+colnames(XX)=D$SNP
 rm(X)
 lol<-nrow(XX)
 j<-nrow(D)
