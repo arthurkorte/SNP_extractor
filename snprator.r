@@ -60,7 +60,7 @@ D_$count<-apply(XX,2,sum)
  if(nrow(D_3)>0) {
          Dns<-rbind(Dns,D_3)}
  
-X2<-XX[,colnames(XX)%in%Dns[,3]]
+X2<-as.matrix(XX[,colnames(XX)%in%Dns[,3]])
 ## get accessions with alternative Allele 
 if(nrow(Dns)>0) {
 Dns$accessions<-NA
