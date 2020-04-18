@@ -26,6 +26,7 @@ setwd(X.folder)
 
 
 D<-Z_[which(Z_$gene==gene),]
+if(any(D[,3]%in%SNPs$SNP)==T) {
 h<-1
  for ( r in 1:nrow(D)) {
 if(D[h,3]%in%SNPs$SNP==FALSE) { h=h+1} else {break}}
@@ -79,6 +80,8 @@ write.table(Dns,file=out2,row.names=FALSE)
 write.table(D_,file=out3,row.names=FALSE)
 
 cat('files',out1,out2,out3,'have been generated!','\n')
+} else {cat('no snps for the gene',gene,'have been detected')}
+
 }
 
 attr(snporator,'data')<-c(1135,2029)
