@@ -23,15 +23,11 @@ X.folder=paste(X.prefix,data,'_data/',sep='')
 
 setwd(X.folder)
 
-
-
 D<-Z_[which(Z_$gene==gene),]
 if(any(D[,3]%in%SNPs$SNP)==T) {
-h<-1
- for ( r in 1:nrow(D)) {
-if(D[h,3]%in%SNPs$SNP==FALSE) { h=h+1} else {break}}
+D<-subset(D,D[,3]%in%SNPs$SNP)
 
-load(paste('X_',data,'_',SNPs[which(SNPs$SNP==D[h,3]),5],'.rda',sep=''))
+load(paste('X_',data,'_',SNPs[which(SNPs$SNP==D[1,3]),5],'.rda',sep=''))
 XX<-as.matrix(X[as.numeric(rownames(X))%in%accessions,colnames(X)%in%D$SNP])
 if(ncol(XX)==1) {colnames(XX)=D$SNP}
 rm(X)
@@ -41,7 +37,7 @@ j<-nrow(D)
 if(D[j,3]%in%SNPs$SNP==FALSE) { j=j-1} else {break}}
 
 
- if(SNPs[which(SNPs$SNP==D[j,3]),5]!=SNPs[which(SNPs$SNP==D[h,3]),5]) {
+ if(SNPs[which(SNPs$SNP==D[j,3]),5]!=SNPs[which(SNPs$SNP==D[1,3]),5]) {
  
 load(paste('X_',data,'_',SNPs[which(SNPs$SNP==D[nrow(D),3]),5],'.rda',sep=''))
 XX<-cbind(XX,X[as.numeric(rownames(X))%in%accessions,colnames(X)%in%D$SNP])
@@ -51,9 +47,9 @@ D_<-subset(D,D$SNP%in%colnames(XX))
 
 D_$count<-apply(XX,2,sum)
 
- A1<-table(D_$variant)
+A1<-table(D_$variant)
  ## output start,stop and missence, modify if you need something else 
- Dns<-D_[grep('missense_variant',D_$variant),]
+Dns<-D_[grep('missense_variant',D_$variant),]
  D_2<-D_[grep('start',D_$variant),]
  if(nrow(D_2)>0) {
          Dns<-rbind(Dns,D_2)}
