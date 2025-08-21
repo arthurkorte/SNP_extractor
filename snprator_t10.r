@@ -2,14 +2,14 @@
 ##for backcompatibility here the old function working with tair10 data 
 
 ##  depending on where you put the data you might need to modfy the respective path
-load('~/data/additional_data/all_acc.rda')
-load('~/data/additional_data/anno_tair10_snps.rda')
-load('~/data/additional_data/tair10.rda')
-load('~/data/additional_data/snps_2029.rda')
+#load('~/data/additional_data/all_acc.rda')
+#load('~/data/additional_data/anno_tair10_snps.rda')
+#load('~/data/additional_data/tair10.rda')
+#load('~/data/additional_data/snps_2029.rda')
 ## X.prefix is the prefix for the X.folder
 
 snporator_t10<-function(gene,X.prefix='~/data/',data=1135,accessions=all,out.folder='~/data/snp_out') {
-  if(!data%in%attributes(snporator)$data) stop('Data need to be either 1135 or 2029')
+  if(!data%in%attributes(snporator_t10)$data) stop('Data need to be either 1135 or 2029')
   X.folder=paste(X.prefix,data,'_data/',sep='')
   
   setwd(X.folder)
@@ -100,7 +100,7 @@ names(isoform_dfs) <- all_isoforms
   
   
   
-setwd(out.folde)
+setwd(out.folder)
   
   for (iso in names(isoform_dfs)) {
     outname <- paste0(iso, ".csv")
